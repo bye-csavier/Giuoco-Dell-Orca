@@ -54,7 +54,7 @@ public class MainPanel extends JPanel implements Runnable,MouseListener {
 		//Other Vars ------------------------
 		
 		final int FPS = 60;
-		private PanelStateFlag panelStatus = PanelStateFlag.menu;
+		private PanelStateFlag panelStatus = PanelStateFlag.gamePlay;
 		
 		Font maruMonica, minecraft;
 		
