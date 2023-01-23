@@ -82,6 +82,18 @@ public class ButtonA implements MouseListener, MouseMotionListener{
 	
 	// FUNCTIONS
 		
+		public void disableListeners() 
+		{
+			panel.removeMouseListener(this);
+			panel.removeMouseMotionListener(this);
+		}
+		
+		public void enableListeners() 
+		{
+			panel.addMouseListener(this);
+			panel.addMouseMotionListener(this);
+		}
+		
 		public void setAfterClickedLink(PanelStateFlag link)
 		{
 			this.afterClick = link;

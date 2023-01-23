@@ -44,7 +44,19 @@ public class SliderDot implements MouseListener, MouseMotionListener{
 	}
 	
 	// FUNCTIONS
-		
+	
+	public void disableListeners() 
+	{
+		panel.removeMouseListener(this);
+		panel.removeMouseMotionListener(this);
+	}
+	
+	public void enableListeners() 
+	{
+		panel.addMouseListener(this);
+		panel.addMouseMotionListener(this);
+	}
+	
 		// Set&Get ------------------------------------------
 	
 	public void setPos(int x,int y)

@@ -95,30 +95,77 @@ public class Game implements MouseWheelListener{
 	
 	private void setupCampo(int squares)
 	{
-		int generalSize = panel.getVMIN(15);
+		int generalSize = 15;
 		this.campo = new Squares[squares+2];
+		int trueSize = panel.getVMIN(generalSize);
+		int fixCenter = panel.getVMIN(0.8);
+		
+		int breakPoint = panel.getWidth()/trueSize;
+		breakPoint++;
+		boolean invert = false;
 		
 		int squareX,squareY;
+		squareX = 0;
+		squareY = 0;
+		
+		int shifter = 1;
+		
+		//System.out.println("trueSize : "+trueSize+ Support.nL +" | breakPoint : "+breakPoint+ Support.nL + "length : " +this.campo.length+ Support.nL +Support.nL);
 		
 		barText = "Creazione Caselle";
 		
-		for(int i=0; i<this.campo.length; i++)
+		for(int i=0; (i)<this.campo.length; i++)
 		{
-			squareX = 100;
-			squareY = generalSize*i;
-			this.campo[i] = new Squares(panel,Squares.SquareType.domanda, generalSize, questionSquareSprites, alertSquareSprites, i, squareX, squareY);
+			if(((i+shifter)%breakPoint) != 0 || i == 0)
+			{
+				if(invert == false)
+				{
+					squareX = trueSize*((i+shifter)%breakPoint);
+					squareX -= fixCenter;
+				}
+				else
+				{
+					squareX = breakPoint*trueSize;
+					squareX -= trueSize*((i+shifter)%breakPoint);
+					squareX -= fixCenter;
+				}
+			}
+			
+			if( ((i+shifter)%breakPoint) == 0 && i != 0)
+			{
+				if(invert == false)
+				{
+					invert = true;
+				}
+				else
+				{
+					invert = false;
+				}
+				
+				squareY += trueSize;
+				this.campo[i] = new Squares(panel,Squares.SquareType.domanda, generalSize, questionSquareSprites, alertSquareSprites,0, i, squareX, squareY);
+				squareY += trueSize;
+			}
+			else
+			{
+				this.campo[i] = new Squares(panel,Squares.SquareType.domanda, generalSize, questionSquareSprites, alertSquareSprites,0, i, squareX, squareY);
+			}
+			
+			//System.out.println("i : "+i+ Support.nL +"extraIndex : "+ Support.nL);
 			
 			panel.repaint();
-			
+	
 			barProgress = Support.map(i,0,this.campo.length,0,78);
 		}
 		
 		this.campo[0].setSprites(alertSquareSprites);
+		this.campo[0].setForceSpriteIndex(-1);
 		this.campo[campo.length-1].setSprites(alertSquareSprites);
+		this.campo[campo.length-1].setForceSpriteIndex(-1);
 		barText = "Completamento...";
 		Support.wait(200, false);
-		panel.repaint();
 		barProgress = 80;
+		panel.repaint();
 	}
 	
 		// Funzioni di loop GUI ------------------------
@@ -166,7 +213,7 @@ public class Game implements MouseWheelListener{
 			
 			if(lastEscPressTime > 0)
 			{
-				panel.setFont(panel.standard.deriveFont(Font.BOLD, panel.getVW(6)));
+				g2.setFont(panel.standard.deriveFont(Font.BOLD, panel.getVW(2)));
 				
 				long pressTime = System.nanoTime() - lastEscPressTime;
 				

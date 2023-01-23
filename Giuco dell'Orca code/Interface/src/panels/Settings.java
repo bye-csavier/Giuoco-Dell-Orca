@@ -40,6 +40,20 @@ public class Settings {
 	
 	// FUNCTIONS ================================
 	
+	public void disableListeners() 
+	{
+		butDone.disableListeners();
+		playerNum.disableListeners();
+		squareNum.disableListeners();
+	}
+	
+	public void enableListeners() 
+	{
+		butDone.enableListeners();
+		playerNum.enableListeners();
+		squareNum.enableListeners();
+	}
+	
 				// Funzioni di loop GUI ------------------------
 			
 			public void update()

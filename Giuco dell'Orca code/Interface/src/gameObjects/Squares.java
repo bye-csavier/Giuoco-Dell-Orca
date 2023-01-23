@@ -35,6 +35,7 @@ public class Squares implements MouseListener, MouseMotionListener{
 	SquareType type;
 	MainPanel panel;
 	boolean beignClick = false;
+	int scale;
 	String squareIndex;
 	
 		// Sprites vars ------------------------------------------
@@ -43,20 +44,22 @@ public class Squares implements MouseListener, MouseMotionListener{
 	int spriteIndex = 0;
 	double lastAnimationTime = 0;
 	long animationSpeed;
+	int forceSpriteIndex = -1;
 		
 	// CONSTRUCTORS
 	
-	public Squares(MainPanel panelGivn,SquareType typeGivn, int tileSizeGivn,BufferedImage questionSquareSprites[], BufferedImage alertSquareSprites[], int squareIndex, int x, int y)
+	public Squares(MainPanel panelGivn,SquareType typeGivn, int tileSizeGivn,BufferedImage questionSquareSprites[], BufferedImage alertSquareSprites[], int forceSpriteIndex, int squareIndex, int x, int y)
 	{
 		this.panel = panelGivn;
-		this.tileSize = tileSizeGivn;
+		this.scale = tileSizeGivn;
+		this.tileSize = panel.getVMIN(scale);
 		this.type = typeGivn;
 		this.setAbsPosition(x,y);
 		this.setPosition(x,y);
 		setupObjectSettings();
 		lastAnimationTime = System.nanoTime();
 		this.squareIndex = Integer.toString(squareIndex);
-		
+		this.forceSpriteIndex = forceSpriteIndex;
 		if(this.type == SquareType.domanda)
 		{
 			squareSprites = questionSquareSprites;
@@ -69,6 +72,18 @@ public class Squares implements MouseListener, MouseMotionListener{
 	}
 	
 	// FUNCTIONS
+	
+	public void disableListeners() 
+	{
+		panel.removeMouseListener(this);
+		panel.removeMouseMotionListener(this);
+	}
+	
+	public void enableListeners() 
+	{
+		panel.addMouseListener(this);
+		panel.addMouseMotionListener(this);
+	}
 	
 		// Get & Set ------------------------------------------
 	
@@ -111,6 +126,11 @@ public class Squares implements MouseListener, MouseMotionListener{
 		this.y = val;
 	}
 	
+	public void setForceSpriteIndex(int val)
+	{
+		this.forceSpriteIndex = val;
+	}
+	
 	public void setupObjectSettings() 
 	{
 		if(this.type == SquareType.domanda)
@@ -122,18 +142,6 @@ public class Squares implements MouseListener, MouseMotionListener{
 			this.animationSpeed = (long) extra.Support.convertTime(0.18, "s", "ns");	
 		}
 		
-	}
-	
-	public void enableDragging()
-	{
-		panel.addMouseListener(this);
-		panel.addMouseMotionListener(this);
-	}
-	
-	public void disableDragging()
-	{
-		panel.removeMouseListener(this);
-		panel.removeMouseMotionListener(this);
 	}
 	
 		// +++ ------------------------------------------
@@ -189,24 +197,42 @@ public class Squares implements MouseListener, MouseMotionListener{
 		
 		if(this.insideScreen() == true)
 		{
-			BufferedImage img = squareSprites[spriteIndex];
-			
-			double curTime = System.nanoTime();
-			
-			if((curTime - lastAnimationTime) >= animationSpeed)
+			if(this.forceSpriteIndex >= 0)
 			{
-				spriteIndex = (spriteIndex + 1) % squareSprites.length;
-				lastAnimationTime = System.nanoTime();
+				BufferedImage img = squareSprites[forceSpriteIndex];
+				
+				double curTime = System.nanoTime();
+				
+				if((curTime - lastAnimationTime) >= animationSpeed)
+				{
+					spriteIndex = (spriteIndex + 1) % squareSprites.length;
+					lastAnimationTime = System.nanoTime();
+				}
+				
+				this.tileSize = panel.getVMIN(scale);
+				g2.drawImage(img, x, y,tileSize,tileSize, null);
+			}
+			else 
+			{
+				BufferedImage img = squareSprites[spriteIndex];
+				
+				double curTime = System.nanoTime();
+				
+				if((curTime - lastAnimationTime) >= animationSpeed)
+				{
+					spriteIndex = (spriteIndex + 1) % squareSprites.length;
+					lastAnimationTime = System.nanoTime();
+				}
+				
+				this.tileSize = panel.getVMIN(scale);
+				g2.drawImage(img, x, y,tileSize,tileSize, null);
 			}
 			
-			this.tileSize = panel.getVMIN(10);
-			g2.drawImage(img, x, y,tileSize,tileSize, null);
+			g2.setFont(panel.standard.deriveFont(Font.BOLD, panel.getVW(panel.clamp(1, scale/10, 4))));
 			
-			g2.setFont(panel.standard.deriveFont(Font.BOLD, panel.getVW(1)));
-			
-			int temp = panel.getVMIN(0.5);
-			int shiftX = panel.getVMIN(7.5);
-			int shiftY = panel.getVMIN(8.6);
+			int temp = panel.getVMIN(scale*0.05);
+			int shiftX = panel.getVMIN(scale*0.75);
+			int shiftY = panel.getVMIN(scale*0.86);
 			
 			g2.setColor(new Color(63,43,0,150));
 			

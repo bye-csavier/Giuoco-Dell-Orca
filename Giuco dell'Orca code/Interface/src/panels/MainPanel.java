@@ -28,6 +28,11 @@ public class MainPanel extends JPanel implements Runnable, MouseWheelListener{
 	
 		//Enumerations ------------------------
 	
+		/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5837361977850486011L; // non so cosa sia la fatta l'intellisense di eclipse
+
 		public enum PanelStateFlag{
 			menu,
 			menuGameSettings,
@@ -114,6 +119,8 @@ public class MainPanel extends JPanel implements Runnable, MouseWheelListener{
 		menuPanel = new Menu(this);
 		settingsPanel = new Settings(this);
 		namesPanel = new Names(this);
+		
+		scrolling -= this.getVMIN(8);
 	}
 	
 	// FUNCTIONS ================================
@@ -209,6 +216,10 @@ public class MainPanel extends JPanel implements Runnable, MouseWheelListener{
 		
 		if(panelStatus == PanelStateFlag.menu)
 		{
+			//Listeners
+			settingsPanel.disableListeners();
+			menuPanel.enableListeners();
+			
 			menuPanel.update();
 		}
 		else if(panelStatus == PanelStateFlag.menuGameSettings)
@@ -217,14 +228,27 @@ public class MainPanel extends JPanel implements Runnable, MouseWheelListener{
 			{
 				clearNames = true;
 			}
+			
+			//Listeners
+			settingsPanel.enableListeners();
+			menuPanel.disableListeners();
+			
 			settingsPanel.update();
 		}
 		else if(panelStatus == PanelStateFlag.names)
 		{
+			//Listeners
+			settingsPanel.disableListeners();
+			menuPanel.disableListeners();
+			
 			namesPanel.update();
 		}
 		else if(panelStatus == PanelStateFlag.gamePlay)
 		{
+			//Listeners
+			settingsPanel.disableListeners();
+			menuPanel.disableListeners();
+			
 			gamePanel.update();
 		}
 		

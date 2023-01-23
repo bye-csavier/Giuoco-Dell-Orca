@@ -37,13 +37,26 @@ public class Menu {
 		
 		// FUNCTIONS ================================
 		
+		public void disableListeners() 
+		{
+			butPlayGame.disableListeners();
+			butGameSettings.disableListeners();
+			butQuit.disableListeners();
+		}
+		
+		public void enableListeners() 
+		{
+			butGameSettings.enableListeners();
+			butPlayGame.enableListeners();
+			butQuit.enableListeners();
+		}
 			// Funzioni di loop GUI ------------------------
 		
 		public void update()
 		{
 			
 		}
-		
+			
 		public void draw(Graphics2D g2)
 		{
 			// TITLE
